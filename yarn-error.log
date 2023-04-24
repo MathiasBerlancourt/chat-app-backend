@@ -1,0 +1,53 @@
+Arguments: 
+  /opt/homebrew/Cellar/node/19.6.0/bin/node /Users/mathias/.npm-global/bin/yarn add corz
+
+PATH: 
+  /Users/mathias/.npm-global/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/mathias/.npm-global/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/mathias/Library/Android/sdk/emulator:/Users/mathias/Library/Android/sdk/tools:/Users/mathias/Library/Android/sdk/tools/bin:/Users/mathias/Library/Android/sdk/platform-tools:/Users/mathias/Library/Android/sdk/emulator:/Users/mathias/Library/Android/sdk/tools:/Users/mathias/Library/Android/sdk/tools/bin:/Users/mathias/Library/Android/sdk/platform-tools:/Users/mathias/Library/Android/sdk/emulator:/Users/mathias/Library/Android/sdk/tools:/Users/mathias/Library/Android/sdk/tools/bin:/Users/mathias/Library/Android/sdk/platform-tools:/Users/mathias/Library/Android/sdk/emulator:/Users/mathias/Library/Android/sdk/tools:/Users/mathias/Library/Android/sdk/tools/bin:/Users/mathias/Library/Android/sdk/platform-tools
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  19.6.0
+
+Platform: 
+  darwin arm64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/corz: Not found
+      at params.callback [as _callback] (/Users/mathias/.npm-global/lib/node_modules/yarn/lib/cli.js:66145:18)
+      at self.callback (/Users/mathias/.npm-global/lib/node_modules/yarn/lib/cli.js:140890:22)
+      at Request.emit (node:events:512:28)
+      at Request.<anonymous> (/Users/mathias/.npm-global/lib/node_modules/yarn/lib/cli.js:141862:10)
+      at Request.emit (node:events:512:28)
+      at IncomingMessage.<anonymous> (/Users/mathias/.npm-global/lib/node_modules/yarn/lib/cli.js:141784:12)
+      at Object.onceWrapper (node:events:626:28)
+      at IncomingMessage.emit (node:events:524:35)
+      at endReadableNT (node:internal/streams/readable:1359:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:82:21)
+
+npm manifest: 
+  {
+    "name": "api",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "dotenv": "^16.0.3",
+      "express": "^4.18.2",
+      "jsonwebtoken": "^9.0.0",
+      "mongoose": "^7.0.4"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
