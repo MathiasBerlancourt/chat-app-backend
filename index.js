@@ -24,14 +24,15 @@ app.get("/", (req, res) => {
 });
 
 app.get("/profile", (req, res) => {
-  const token = req.cookies?.token;
+  const token = req.cookies.token;
   console.log("cookies:", req.cookies);
   if (token) {
-    jwt.verify(token, process.env.JWT_SECRET, (err) => {
+    jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
       if (err) {
         res.status(401).json({ message: "Unauthorized" });
       } else {
-        res.json({ message: "success" });
+        const user = await User.findById(decodedToken._id);
+        res.json({ message: "success", user });
       }
     });
   } else {
@@ -49,17 +50,65 @@ app.post("/register", async (req, res) => {
     jwt.sign(
       { userId: createUser._id, username },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" },
+      {},
       (err, token) => {
-        if (err) throw err;
+        if (err) {
+          throw err;
+        }
+
         res
-          .cookie("token", token, { httpOnly: true })
-          .json({ message: `Welcome ${username}`, token });
+          .cookie("token", token, {
+            strict: false,
+            httpOnly: true,
+            sameSite: "none",
+            secure: true,
+          })
+          .json(createUser);
         console.log("token:", token);
       }
     );
+    console.log("createUser:", createUser);
   } catch (error) {
-    res.json({ error });
+    res.json({ message: error });
+  }
+});
+
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+  console.log("password:", password);
+
+  try {
+    const userFound = await User.findOne({ username });
+    console.log("userFound:", userFound);
+
+    if (userFound) {
+      const validPassword = bcrypt.compare(password, userFound.password);
+      if (validPassword) {
+        jwt.sign(
+          { userId: userFound._id, username },
+          process.env.JWT_SECRET,
+          { expiresIn: "1h" },
+          (err, token) => {
+            res
+              .cookie("token", token, {
+                httpOnly: true,
+                sameSite: "none",
+                secure: true,
+              })
+              .json({
+                id: userFound._id,
+              });
+          }
+        );
+      } else {
+        res.status(422).json({ message: "Invalid password" });
+      }
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
