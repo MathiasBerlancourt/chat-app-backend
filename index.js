@@ -8,6 +8,7 @@ mongoose.connect(process.env.MONGODB_URL);
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
+const ws = require("ws");
 
 const app = express();
 app.use(cookieParser());
@@ -108,6 +109,28 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.listen(3000, () => {
+app.post("/message", (req, res) => {
+  const token = req.cookies?.token;
+  if (token) {
+    jwt.verify(token, process.env.JWT_SECRET, {}, (err, userData) => {
+      if (err) throw err;
+      console.log("userData:", userData);
+      const { message } = req.body;
+      console.log("message:", message);
+      wss.clients.forEach((client) => {
+        client.send(message);
+      });
+      res.json({ message: "message sent" });
+    });
+  } else {
+    res.status(401).json("no token");
+  }
+});
+
+const server = app.listen(3000, () => {
   console.log(`Server started on port ${process.env.SERVER_URL} 🚦`);
+});
+const wss = new ws.WebSocketServer({ server });
+wss.on("connection", (ws) => {
+  console.log("connected");
 });
