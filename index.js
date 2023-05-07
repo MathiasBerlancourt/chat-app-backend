@@ -24,19 +24,14 @@ app.get("/", (req, res) => {
 });
 
 app.get("/profile", (req, res) => {
-  const token = req.cookies.token;
-  console.log("cookies:", req.cookies);
+  const token = req.cookies?.token;
   if (token) {
-    jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
-      if (err) {
-        res.status(401).json({ message: "Unauthorized" });
-      } else {
-        const user = await User.findById(decodedToken._id);
-        res.json({ message: "success", user });
-      }
+    jwt.verify(token, process.env.JWT_SECRET, {}, (err, userData) => {
+      if (err) throw err;
+      res.json(userData);
     });
   } else {
-    res.status(422).json({ message: "no token" });
+    res.status(401).json("no token");
   }
 });
 
@@ -97,6 +92,7 @@ app.post("/login", async (req, res) => {
               })
               .json({
                 id: userFound._id,
+                username: userFound.username,
               });
           }
         );
