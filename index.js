@@ -1,4 +1,5 @@
 require("dotenv").config();
+const cors = require("cors");
 const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
@@ -13,8 +14,13 @@ const ws = require("ws");
 const app = express();
 app.use(cookieParser());
 const mongo_db_url = process.env.MONGODB_URL;
-const cors = require("cors");
-app.use(cors());
+
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 app.use(morgan("dev"));
@@ -22,6 +28,16 @@ app.use(morgan("dev"));
 app.get("/", (req, res) => {
   res.send("connexion ok ✅");
   console.log("connexion ok ✅");
+});
+
+app.get("/contacts", async (req, res) => {
+  try {
+    const users = await User.find();
+    console.log("users:", users);
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(401).json({ message: "error" });
+  }
 });
 
 app.get("/profile", (req, res) => {
